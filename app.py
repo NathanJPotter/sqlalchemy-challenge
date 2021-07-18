@@ -124,9 +124,10 @@ def start_end_dates():
                first())
     highest_temp = highest_temp[0]
 
-    return jsonify(lowest_temp)
-    return jsonify(av_temp)
-    return jsonify(highest_temp)
+    start_end_results = (f"Key temperatures (in degrees Farenheit) at {active_stationName} are: \
+    min = {lowest_temp}, av = {av_temp} and max = {highest_temp}")
+
+    return jsonify(start_end_results)
 
 if __name__ == "__main__":
     app.run(debug=True)
