@@ -62,3 +62,13 @@ def precipitation():
     # Dict with date as the key ad prcp as the value
     precip = {date: prcp for date, prcp in precipitation}
     return jsonify(precip)
+
+@app.route("/api/v1.0/stations")
+def stations():
+    """Return the most active stations that have the most data"""
+    # List the stations and the counts in descending order
+    station_activity = (session.query(Measurement.station, func.count(Measurement.station))\
+                        .group_by(Measurement.station)\
+                        .order_by(func.count(Measurement.station).desc())\
+                        .all())
+    return jsonify(station_activity)
