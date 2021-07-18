@@ -95,46 +95,38 @@ def temperature_observations():
     return jsonify(temp_data)
 
 @app.route("/api/v1.0/start")
-def start_date_temps(startDate):
+def start_date_temps(start):
+
     """Query the  min temp, the av temp, and the max temp from a given start date."""
-    sel = [Measurement.date, func.min(Measurement.tobs), func.avg(Measurement.tobs), func.max(Measurement.tobs)]
-
-    results =  (session.query(*sel)\
-                       .filter(func.strftime("%Y-%m-%d", Measurement.date) >= startDate)\
-                       .group_by(Measurement.date)\
-                       .all())
-
-    dates = []                       
-    for result in results:
-        date_dict = {}
-        date_dict["Date"] = result[0]
-        date_dict["Low Temp"] = result[1]
-        date_dict["Avg Temp"] = result[2]
-        date_dict["High Temp"] = result[3]
-        dates.append(date_dict)
-    return jsonify(dates)
+    start = datetime.strptime('2016-08-23', '%Y-%m-%d').date()
+    start_results = session.query(func.avg(Measurement.tobs),func.max(Measurement.tobs),func.min(Measurement.tobs).\
+               filter(Measurement.date >= start)
+    start_tobs_list = []   
+    for i in start_results:
+        dict = {}
+        dict["TMIN"] = float(tobs[1])                     
+        dict["TMAX"] = float(tobs[0])
+        dict["TAVG"] = float(tobs[2])
+        start_tobs_list.append(dict)
+    return jsonify(start_tobs_list)  
 
 
 @app.route("/api/v1.0/start/end")
-def start_end_dates(startDate, endDate):
+def start_end_dates(start, end):
+    
     """Query the  min temp, the av temp, and the max temp for a given start or start-end range."""
-    sel = [Measurement.date, func.min(Measurement.tobs), func.avg(Measurement.tobs), func.max(Measurement.tobs)]
-
-    results =  (session.query(*sel)
-                       .filter(func.strftime("%Y-%m-%d", Measurement.date) >= startDate)
-                       .filter(func.strftime("%Y-%m-%d", Measurement.date) <= endDate)
-                       .group_by(Measurement.date)
-                       .all())
-
-    dates = []                       
-    for result in results:
-        date_dict = {}
-        date_dict["Date"] = result[0]
-        date_dict["Low Temp"] = result[1]
-        date_dict["Avg Temp"] = result[2]
-        date_dict["High Temp"] = result[3]
-        dates.append(date_dict)
-    return jsonify(dates)
+    start = datetime.strptime('2016-08-23', '%Y-%m-%d').date()                      
+    end = datetime.strptime('2017-08-23', '%Y-%m-%d').date()
+    end_results = session.query(func.avg(Measurement.tobs),func.max(Measurement.tobs),func.min(Measurement.tobs).\
+            filter(Measurement.date >= start)                     
+    start_end_tobs_list = []
+    for i in start_end_tobs_list:
+        dict = {}
+        dict["TMIN"] = float(tobs[1])                     
+        dict["TMAX"] = float(tobs[0])
+        dict["TAVG"] = float(tobs[2])
+        start_end_tobs_list.append(dict)
+    return jsonify(start__end_tobs_list) 
 
 if __name__ == "__main__":
     app.run(debug=True)
