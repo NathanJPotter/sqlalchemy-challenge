@@ -94,70 +94,38 @@ def temperature_observations():
                    .all())
     return jsonify(temp_data)
 
-# @app.route("/api/v1.0/start")
-# def start_date_temps(start):
+# @app.route("/api/v1.0/start/end")
+# def start_end_dates():
 
-#     """Query the  min temp, the av temp, and the max temp from a given start date."""
+#     """Query the  min temp, the av temp, and the max temp for a given start-end range."""
+#     station_activity = (session.query(Measurement.station, func.count(Measurement.station))\
+#                         .group_by(Measurement.station)\
+#                         .order_by(func.count(Measurement.station).desc())\
+#                         .all())
 
-#     start = datetime.strptime('2016-08-23', '%Y-%m-%d').date()
-#     start_results = session.query(func.avg(Measurement.tobs),func.max(Measurement.tobs),func.min(Measurement.tobs).\
-#                filter(Measurement.date >= start)
-#     start_tobs_list = []   
-#     for i in start_results:
-#         dict = {}
-#         dict["TMIN"] = float(tobs[1])                     
-#         dict["TMAX"] = float(tobs[0])
-#         dict["TAVG"] = float(tobs[2])
-#         start_tobs_list.append(dict)
-#     return jsonify(start_tobs_list)  
-
-
-@app.route("/api/v1.0/start/end")
-def start_end_dates():
-
-    """Query the  min temp, the av temp, and the max temp for a given start or start-end range."""
-    station_activity = (session.query(Measurement.station, func.count(Measurement.station))\
-                        .group_by(Measurement.station)\
-                        .order_by(func.count(Measurement.station).desc())\
-                        .all())
-
-    active_station_ID = station_activity[0][0]
+#     active_station_ID = station_activity[0][0]
     
-    active_stationName = (session.query(Station.name)\
-                      .filter_by(station = active_station_ID))
-    active_stationName = active_stationName[0][0]
+#     active_stationName = (session.query(Station.name)\
+#                       .filter_by(station = active_station_ID))
+#     active_stationName = active_stationName[0][0]
 
-    lowest_temp = (session.query(Measurement.tobs).\
-               filter(Measurement.station == active_station_ID).\
-               order_by(Measurement.tobs.asc()).\
-               first())
-    lowest_temp = lowest_temp[0]
+#     lowest_temp = (session.query(Measurement.tobs).\
+#                filter(Measurement.station == active_station_ID).\
+#                order_by(Measurement.tobs.asc()).\
+#                first())
+#     lowest_temp = lowest_temp[0]
 
-    av_temp = (session.query(func.avg(Measurement.tobs))\
-                  .filter(Measurement.station == active_station_ID))
-    av_temp = '{0:.3}'.format(av_temp[0][0])
+#     av_temp = (session.query(func.avg(Measurement.tobs))\
+#                   .filter(Measurement.station == active_station_ID))
+#     av_temp = '{0:.3}'.format(av_temp[0][0])
 
-    highest_temp = (session.query(Measurement.tobs).\
-               filter(Measurement.station == active_station_ID).\
-               order_by(Measurement.tobs.desc()).\
-               first())
-    highest_temp = highest_temp[0]
+#     highest_temp = (session.query(Measurement.tobs).\
+#                filter(Measurement.station == active_station_ID).\
+#                order_by(Measurement.tobs.desc()).\
+#                first())
+#     highest_temp = highest_temp[0]
 
-    return jsonify({f"Temperatures (in degrees Farenheit) at '{active_stationName}' are as follows: lowest is {lowest_temp}, average is {av_temp}, and highest is {highest_temp}"})
-
-
-    # start = datetime.strptime('2016-08-23', '%Y-%m-%d').date()                      
-    # end = datetime.strptime('2017-08-23', '%Y-%m-%d').date()
-    # end_results = session.query(func.avg(Measurement.tobs),func.max(Measurement.tobs),func.min(Measurement.tobs).\
-    #         filter(Measurement.date >= start)                     
-    # start_end_tobs_list = []
-    # for i in end_results:
-    #     dict = {}
-    #     dict["TMIN"] = float(tobs[1])                     
-    #     dict["TMAX"] = float(tobs[0])
-    #     dict["TAVG"] = float(tobs[2])
-    #     start_end_tobs_list.append(dict)
-    # return jsonify(start_end_tobs_list) 
+#     return jsonify({f"Temperatures (in degrees Farenheit) at '{active_stationName}' are as follows: lowest is {lowest_temp}, average is {av_temp}, and highest is {highest_temp}"})
 
 if __name__ == "__main__":
     app.run(debug=True)
