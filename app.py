@@ -30,3 +30,14 @@ Station = Base.classes.station
 # Create our session (link) from Python to the DB
 session = Session(engine)
 
+#############################################
+# Flask Set up
+#############################################
+app = Flask(__name__)
+
+#############################################
+#Flask Routes
+#############################################
+@app.route("/")
+def welcome():
+    return
