@@ -77,6 +77,15 @@ def stations():
 def temperature_observations():
     """Query the dates and temperature observations of the most active station for the last year of data"""
     # Get the last 12 months of temperature data for the most active station
+    prev_year = dt.date(2017, 8, 23) - dt.timedelta(days=365)
+
+    station_activity = (session.query(Measurement.station, func.count(Measurement.station))\
+                        .group_by(Measurement.station)\
+                        .order_by(func.count(Measurement.station).desc())\
+                        .all())
+
+    active_station_ID = station_activity[0][0]
+    
     temp_data = (session.query(Measurement.date, Measurement.tobs)\
                    .filter(Measurement.date >= prev_year)\
                    .filter(Measurement.station == active_station_ID)\
