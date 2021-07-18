@@ -94,7 +94,7 @@ def temperature_observations():
                    .all())
     return jsonify(temp_data)
 
-@app.route("/api/v1.0/<start>")
+@app.route("/api/v1.0/start")
 def start_date_temps():
     """Query the  min temp, the av temp, and the max temp from a given start date."""
     sel = [Measurement.date, func.min(Measurement.tobs), func.avg(Measurement.tobs), func.max(Measurement.tobs)]
@@ -115,6 +115,6 @@ def start_date_temps():
     return jsonify(dates)
 
 
-@app.route("/api/v1.0/<start>/<end>")
+@app.route("/api/v1.0/start/end")
 def start_end_dates():
     """Query the  min temp, the av temp, and the max temp for a given start or start-end range."""
