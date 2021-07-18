@@ -46,7 +46,6 @@ def welcome():
         f"/api/v1.0/precipitation<br/>"
         f"/api/v1.0/stations<br/>"
         f"/api/v1.0/tobs<br/>"
-        f"/api/v1.0/start<br/>"
         f"/api/v1.0/start/end"
     )
 
@@ -94,38 +93,38 @@ def temperature_observations():
                    .all())
     return jsonify(temp_data)
 
-# @app.route("/api/v1.0/start/end")
-# def start_end_dates():
+@app.route("/api/v1.0/start/end")
+def start_end_dates():
 
-#     """Query the  min temp, the av temp, and the max temp for a given start-end range."""
-#     station_activity = (session.query(Measurement.station, func.count(Measurement.station))\
-#                         .group_by(Measurement.station)\
-#                         .order_by(func.count(Measurement.station).desc())\
-#                         .all())
+    """Query the  min temp, the av temp, and the max temp for a given start-end range."""
+    station_activity = (session.query(Measurement.station, func.count(Measurement.station))\
+                        .group_by(Measurement.station)\
+                        .order_by(func.count(Measurement.station).desc())\
+                        .all())
 
-#     active_station_ID = station_activity[0][0]
+    active_station_ID = station_activity[0][0]
     
-#     active_stationName = (session.query(Station.name)\
-#                       .filter_by(station = active_station_ID))
-#     active_stationName = active_stationName[0][0]
+    active_stationName = (session.query(Station.name)\
+                      .filter_by(station = active_station_ID))
+    active_stationName = active_stationName[0][0]
 
-#     lowest_temp = (session.query(Measurement.tobs).\
-#                filter(Measurement.station == active_station_ID).\
-#                order_by(Measurement.tobs.asc()).\
-#                first())
-#     lowest_temp = lowest_temp[0]
+    lowest_temp = (session.query(Measurement.tobs).\
+               filter(Measurement.station == active_station_ID).\
+               order_by(Measurement.tobs.asc()).\
+               first())
+    lowest_temp = lowest_temp[0]
 
-#     av_temp = (session.query(func.avg(Measurement.tobs))\
-#                   .filter(Measurement.station == active_station_ID))
-#     av_temp = '{0:.3}'.format(av_temp[0][0])
+    av_temp = (session.query(func.avg(Measurement.tobs))\
+                  .filter(Measurement.station == active_station_ID))
+    av_temp = '{0:.3}'.format(av_temp[0][0])
 
-#     highest_temp = (session.query(Measurement.tobs).\
-#                filter(Measurement.station == active_station_ID).\
-#                order_by(Measurement.tobs.desc()).\
-#                first())
-#     highest_temp = highest_temp[0]
+    highest_temp = (session.query(Measurement.tobs).\
+               filter(Measurement.station == active_station_ID).\
+               order_by(Measurement.tobs.desc()).\
+               first())
+    highest_temp = highest_temp[0]
 
-#     return jsonify({f"Temperatures (in degrees Farenheit) at '{active_stationName}' are as follows: lowest is {lowest_temp}, average is {av_temp}, and highest is {highest_temp}"})
+    return jsonify(lowest_temp)
 
 if __name__ == "__main__":
     app.run(debug=True)
