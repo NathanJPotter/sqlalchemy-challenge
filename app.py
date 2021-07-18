@@ -96,7 +96,7 @@ def temperature_observations():
 @app.route("/api/v1.0/start/end")
 def start_end_dates():
 
-    """Query the  min temp, the av temp, and the max temp for a given start-end range."""
+    """Query the  min temp, av temp, and max temp for most active station between start-end date range."""
     station_activity = (session.query(Measurement.station, func.count(Measurement.station))\
                         .group_by(Measurement.station)\
                         .order_by(func.count(Measurement.station).desc())\
