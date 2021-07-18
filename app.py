@@ -46,6 +46,7 @@ def welcome():
         f"/api/v1.0/precipitation<br/>"
         f"/api/v1.0/stations<br/>"
         f"/api/v1.0/tobs<br/>"
+        f"/api/v1.0/<start>"
         f"/api/v1.0/<start>/<end>"
     )
 
@@ -92,3 +93,28 @@ def temperature_observations():
                    .order_by(Measurement.date)
                    .all())
     return jsonify(temp_data)
+
+@app.route("/api/v1.0/<start>")
+def start_date_temps():
+    """Query the  min temp, the av temp, and the max temp from a given start date."""
+    sel = [Measurement.date, func.min(Measurement.tobs), func.avg(Measurement.tobs), func.max(Measurement.tobs)]
+
+    results =  (session.query(*sel)
+                       .filter(func.strftime("%Y-%m-%d", Measurement.date) >= startDate)
+                       .group_by(Measurement.date)
+                       .all())
+
+    dates = []                       
+    for result in results:
+        date_dict = {}
+        date_dict["Date"] = result[0]
+        date_dict["Low Temp"] = result[1]
+        date_dict["Avg Temp"] = result[2]
+        date_dict["High Temp"] = result[3]
+        dates.append(date_dict)
+    return jsonify(dates)
+
+
+@app.route("/api/v1.0/<start>/<end>")
+def start_end_dates():
+    """Query the  min temp, the av temp, and the max temp for a given start or start-end range."""
